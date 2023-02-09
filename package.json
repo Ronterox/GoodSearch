@@ -1,15 +1,15 @@
 {
-  "name": "goodsearch",
-  "version": "1.0.0",
-  "description": "Use advance search syntax in multiple search engines at the same time",
-  "scripts": {
-    "start": "web-ext -s",
-    "dev": "npm start . run",
-    "sign": "npm start . #NEED_API_KEY sign",
-    "build": "npm start . build"
-  },
-  "devDependencies": {
-    "@types/firefox-webext-browser": "^109.0.0",
-    "web-ext": "^7.5.0"
-  }
+	"name": "goodsearch",
+	"version": "1.0.0",
+	"description": "Use advance search syntax in multiple search engines at the same time",
+	"scripts": {
+		"start": "web-ext -s",
+		"dev": "web-ext run",
+		"sign": "web-ext #NEED_API_KEY sign",
+		"build": "web-ext build -o -i webextensions-examples/ package*.json"
+	},
+	"devDependencies": {
+		"@types/firefox-webext-browser": "^109.0.0",
+		"web-ext": "^7.5.0"
+	}
 }

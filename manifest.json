@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "GoodSearch",
   "version": "2.0",
-  "description": "Search same query in many search engines",
+  "description": "Advance query searches in many engines, by using '/' at the start of the url search bar.\nExample URL: / How to cook .pdf -> Turns into -> +How to \"cook\" filetype:pdf",
   "icons": {
     "8": "icons/megu_8.jpeg",
     "16": "icons/megu_16.jpeg",
