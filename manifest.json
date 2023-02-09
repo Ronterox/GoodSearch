@@ -11,7 +11,8 @@
     "96": "icons/megu_96.jpeg"
   },
   "permissions": [
-    "search"
+    "search",
+    "tabs"
   ],
   "omnibox": {
     "keyword": "/"

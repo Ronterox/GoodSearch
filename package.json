@@ -3,12 +3,13 @@
   "version": "1.0.0",
   "description": "Use advance search syntax in multiple search engines at the same time",
   "scripts": {
-    "start": "web-ext -s src",
-    "run": "npm start run",
-    "sign": "npm start #NEED_API_KEY sign",
-    "build": "npm start build"
+    "start": "web-ext -s",
+    "dev": "npm start . run",
+    "sign": "npm start . #NEED_API_KEY sign",
+    "build": "npm start . build"
   },
-  "dependencies": {
-    "web-ext": "^7.2.0"
+  "devDependencies": {
+    "@types/firefox-webext-browser": "^109.0.0",
+    "web-ext": "^7.5.0"
   }
 }
