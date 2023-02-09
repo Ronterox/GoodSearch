@@ -31,16 +31,19 @@ browser.omnibox.onInputChanged.addListener((text, suggest) => {
 });
 
 let lastSearch = "";
-async function search(text, engineName, tabId = undefined) {
-	const isStillLastSearch = (tab) => tab.url.includes(engineName.split(" ")[0].toLowerCase()) && tab.title.includes(lastSearch);
-	if (lastSearch != "") tabId = await browser.tabs.query({}).then((tabs) => tabs.find(isStillLastSearch));
+async function search(text, engineName) {
+	let tabId = undefined;
+	if (lastSearch != "") {
+		const isStillLastSearch = (tab) => tab.url.includes(engineName.split(" ")[0].toLowerCase()) && tab.title.includes(lastSearch);
+		tabId = await browser.tabs.query({}).then((tabs) => tabs.find(isStillLastSearch));
+	}
 	return browser.search.search({ query: text, engine: engineName, tabId: tabId });
 }
 
 browser.omnibox.onInputEntered.addListener((text) => {
 	browser.search.get().then(async (engines) => {
 		let tabId = await browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => tabs[0].id);
-		Promise.all(engines.map((engine) => search(text, engine.name, tabId))).then(() => {
+		Promise.all(engines.map((engine) => search(text, engine.name))).then(() => {
 			lastSearch = text;
 			browser.tabs.remove(tabId);
 		});
