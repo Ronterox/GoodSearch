@@ -1,0 +1,24 @@
+{
+  "manifest_version": 2,
+  "name": "GoodSearch",
+  "version": "2.0",
+  "description": "Search same query in many search engines",
+  "icons": {
+    "8": "icons/megu_8.jpeg",
+    "16": "icons/megu_16.jpeg",
+    "32": "icons/megu_32.jpeg",
+    "48": "icons/megu_48.jpeg",
+    "96": "icons/megu_96.jpeg"
+  },
+  "permissions": [
+    "search"
+  ],
+  "omnibox": {
+    "keyword": "/"
+  },
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
+  }
+}
