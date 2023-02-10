@@ -1,8 +1,8 @@
 const MODIFIERS = { inUrl: "inurl:", fileType: "filetype:", site: "site:", show: '"', notShow: "-", showMore: "+" };
 const MODS = Object.values(MODIFIERS);
 
-browser.omnibox.setDefaultSuggestion({ description: 'Write, then move with "TAB/SHIFT+TAB", select with "SPACEBAR"' });
-browser.omnibox.onInputChanged.addListener((text, suggest) => {
+chrome.omnibox.setDefaultSuggestion({ description: 'Write, then move with "TAB/SHIFT+TAB", select with "SPACEBAR"' });
+chrome.omnibox.onInputChanged.addListener((text, suggest) => {
 	const dotPriority = (str) => (str.includes(".") ? str.length * 3 : str.length);
 	const lengthPriority = (a, b) => dotPriority(b) - dotPriority(a);
 
@@ -30,31 +30,6 @@ browser.omnibox.onInputChanged.addListener((text, suggest) => {
 	suggest(suggestions);
 });
 
-// TODO: Google calculator
-// TODO: youtube searcher
-// TODO: google translate
-// TODO: google maps
-// TODO: !gmail actions
-
-let ids = {};
-async function search(text, engineName) {
-	return browser.search.search({ query: text, engine: engineName, tabId: ids[engineName] }).catch((err) => console.log("Search error: " + err));
-}
-
-browser.tabs.onRemoved.addListener((tabId) => {
-	for (let engineName in ids) if (ids[engineName] == tabId) delete ids[engineName];
-});
-
-browser.omnibox.onInputEntered.addListener((text) => {
-	browser.search.get().then((engines) => {
-		Promise.all(
-			engines.map(async (engine) => {
-				if (!(engine.name in ids)) await browser.tabs.create({ active: false }).then((tab) => (ids[engine.name] = tab.id));
-				return search(text, engine.name);
-			})
-		).then(async () => {
-			let tabId = await browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => tabs[0].id);
-			if (!Object.values(ids).includes(tabId)) browser.tabs.remove(tabId);
-		});
-	});
+chrome.omnibox.onInputEntered.addListener((text) => {
+	chrome.search.query({ text }).catch((err) => console.log("Search error: " + err));
 });

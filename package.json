@@ -6,7 +6,8 @@
 		"start": "web-ext -s",
 		"dev": "web-ext run",
 		"sign": "web-ext #NEED_API_KEY sign",
-		"build": "web-ext build -o -i webextensions-examples/ package*.json"
+		"build": "web-ext build -o -i webextensions-examples/ package*.json",
+		"build-chrome": "web-ext -s chrome-ver/ build -o -i webextensions-examples/ package*.json"
 	},
 	"devDependencies": {
 		"@types/firefox-webext-browser": "^109.0.0",
