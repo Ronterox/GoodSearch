@@ -1,7 +1,7 @@
 const MODIFIERS = { inUrl: "inurl:", fileType: "filetype:", site: "site:", show: '"', notShow: "-", showMore: "+" };
 const MODS = Object.values(MODIFIERS);
 
-browser.omnibox.setDefaultSuggestion({ description: 'Move with "TAB/SHIFT+TAB", select with "SPACEBAR"' });
+browser.omnibox.setDefaultSuggestion({ description: 'Write, then move with "TAB/SHIFT+TAB", select with "SPACEBAR"' });
 browser.omnibox.onInputChanged.addListener((text, suggest) => {
 	const dotPriority = (str) => (str.includes(".") ? str.length * 3 : str.length);
 	const lengthPriority = (a, b) => dotPriority(b) - dotPriority(a);
@@ -30,22 +30,31 @@ browser.omnibox.onInputChanged.addListener((text, suggest) => {
 	suggest(suggestions);
 });
 
-let lastSearch = "";
+// TODO: Google calculator
+// TODO: youtube searcher
+// TODO: google translate
+// TODO: google maps
+// TODO: !gmail actions
+
+let ids = {};
 async function search(text, engineName) {
-	let tabId = undefined;
-	if (lastSearch != "") {
-		const isStillLastSearch = (tab) => tab.url.includes(engineName.split(" ")[0].toLowerCase()) && tab.title.includes(lastSearch);
-		tabId = await browser.tabs.query({}).then((tabs) => tabs.find(isStillLastSearch));
-	}
-	return browser.search.search({ query: text, engine: engineName, tabId: tabId });
+	return browser.search.search({ query: text, engine: engineName, tabId: ids[engineName] }).catch((err) => console.log("Search error: " + err));
 }
+
+browser.tabs.onRemoved.addListener((tabId) => {
+	for (let engineName in ids) if (ids[engineName] == tabId) delete ids[engineName];
+});
 
 browser.omnibox.onInputEntered.addListener((text) => {
 	browser.search.get().then(async (engines) => {
 		let tabId = await browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => tabs[0].id);
-		Promise.all(engines.map((engine) => search(text, engine.name))).then(() => {
-			lastSearch = text;
-			browser.tabs.remove(tabId);
+		Promise.all(
+			engines.map(async (engine) => {
+				if (!(engine.name in ids)) await browser.tabs.create({ active: false }).then((tab) => (ids[engine.name] = tab.id));
+				return search(text, engine.name);
+			})
+		).then(() => {
+			if (!Object.values(ids).includes(tabId)) browser.tabs.remove(tabId);
 		});
 	});
 });
